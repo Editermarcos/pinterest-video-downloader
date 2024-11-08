@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Baixar Vídeo do Pinterest</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            max-width: 500px;
+            padding: 30px;
+            background-color: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+        h1 {
+            color: #4A90E2;
+            font-weight: bold;
+        }
+        .btn-primary {
+            background-color: #4A90E2;
+            border: none;
+        }
+        .btn-primary:hover {
+            background-color: #357ABD;
+        }
+        .footer {
+            margin-top: 20px;
+            color: #aaa;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Baixar Vídeo do Pinterest</h1>
+        <p class="mb-4">Cole o link do vídeo do Pinterest abaixo e clique em "Baixar" para salvar o vídeo.</p>
+        <form id="downloadForm">
+            <div class="form-group">
+                <input type="text" id="url" name="url" class="form-control" required placeholder="https://www.pinterest.com/...">
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">Baixar</button>
+        </form>
+        <div class="footer">
+            <p>Desenvolvido para fins educativos.</p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('downloadForm').onsubmit = async function(event) {
+            event.preventDefault();
+            const url = document.getElementById('url').value;
+            const response = await fetch('/download', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ url: url })
+            });
+
+            if (response.ok) {
+                const blob = await response.blob();
+                const downloadUrl = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = downloadUrl;
+                a.download = 'video.mp4';
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+            } else {
+                alert('Erro ao baixar o vídeo. Verifique o link e tente novamente.');
+            }
+        };
+    </script>
+</body>
+</html>
